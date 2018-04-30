@@ -42,6 +42,6 @@ The IEX API only provides free data for stocks, not indices, so the closest thin
 - NASDAQ: `QQQ`
 - Russell 2000: `IWM`
 
-## Brower compatibility
+## Browser compatibility
 
 The page uses the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), which means it does not work with Internet Explorer.
