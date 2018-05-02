@@ -63,7 +63,7 @@
     <script>
       'use strict';
 
-      const PORTFOLIOS = [
+      const DEFAULT_PORTFOLIOS = [
         {'name': 'Market ETFs', 'symbols': ['SPY', 'DIA', 'QQQ', 'IWM']},
         {'name': 'Sector ETFs', 'symbols': ['XLF', 'XLK', 'XLV', 'XLP', 'XLY', 'XLE', 'XLB', 'XLI', 'XLU', 'XLRE']},
         {'name': 'Banks', 'symbols': ['GS', 'MS', 'JPM', 'WFC', 'C', 'BAC', 'BCS', 'DB', 'CS', 'RBS']},
@@ -74,6 +74,7 @@
         {'name': 'BigCos', 'symbols': ['XOM', 'WMT', 'JNJ', 'GE', 'T', 'KO', 'DIS', 'MCD', 'PG']}
       ];
 
+      const PORTFOLIOS = portfoliosFromQueryParams() || DEFAULT_PORTFOLIOS;
       const REFRESH_SECONDS = 10;
       const BATCH_SIZE = 100;
       const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
@@ -187,6 +188,19 @@
             }
           });
         });
+      }
+
+      function portfoliosFromQueryParams() {
+        if (!window.location.search) return;
+
+        let params = new URLSearchParams(window.location.search);
+        let portfolios = [];
+
+        for (let p of params) {
+          portfolios.push({'name': p[0], 'symbols': p[1].split(',')});
+        }
+
+        return portfolios;
       }
 
       function symbolUrl(symbol) {
