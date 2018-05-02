@@ -14,10 +14,14 @@ I used to use Google Finance portfolios as a simple way to watch a few baskets o
 
 ## Customize
 
-Edit the `PORTFOLIOS` variable within `index.html`. For example, if you wanted to see the collection of bank stocks and tech stocks from the above screenshot, you could do this:
+Add portfolio names and symbols as query parameters in the URL. For example, if you wanted to see the collection of bank and tech stocks from the above screenshot, you could use this URL:
+
+https://toddwschneider.com/stocks/?Banks=GS,MS,JPM&Tech=AAPL,GOOGL,MSFT,AMZN
+
+Alternatively, you can edit the `DEFAULT_PORTFOLIOS` variable within `index.html`. For example:
 
 ```js
-const PORTFOLIOS = [
+const DEFAULT_PORTFOLIOS = [
   {'name': 'Banks', 'symbols': ['GS', 'MS', 'JPM']},
   {'name': 'Tech', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'AMZN']}
 ];
