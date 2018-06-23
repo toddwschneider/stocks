@@ -144,7 +144,7 @@
       function updateDataForBatch(symbols, addTitle) {
         let filters = ['latestPrice', 'change', 'changePercent', 'marketCap'];
         if (addTitle) filters.push('companyName');
-        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
+        let url = `${BASE_URL}?types=quote,dividends,news,peers,stats,company,financials,splits,volume-by-venue&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
 
         fetch(url).then(response => response.json()).then(json => {
           symbols.forEach(symbol => {
