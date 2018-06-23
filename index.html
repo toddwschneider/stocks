@@ -11,14 +11,19 @@
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
           "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+		  background-color: #E0E0E0;
+		  color: #323232;
       }
+	  a:link { color: #85bb65; }
+	  a:visited { color: #85bb65; }
+	  a {text-decoration: none;}
       table { font-family: Courier, monospace; }
       .stocks-container {
         margin-bottom: 1.5em;
         width: 100%;
         max-width: 600px;
       }
-      .stocks-container a { text-decoration: none; }
+      .stocks-container /*a { text-decoration: none; }*/
       table {
         border-collapse: collapse;
         width: 100%;
@@ -64,15 +69,11 @@
       'use strict';
 
       const DEFAULT_PORTFOLIOS = [
-        {'name': 'Market ETFs', 'symbols': ['SPY', 'DIA', 'QQQ', 'IWM']},
-        {'name': 'Sector ETFs', 'symbols': ['XLF', 'XLK', 'XLV', 'XLP', 'XLY', 'XLE', 'XLB', 'XLI', 'XLU', 'XLRE']},
-        {'name': 'Banks', 'symbols': ['GS', 'MS', 'JPM', 'WFC', 'C', 'BAC', 'BCS', 'DB', 'CS', 'RBS']},
-        {'name': 'Tech', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB', 'TWTR', 'NFLX', 'SNAP', 'SPOT', 'DBX', 'BABA', 'INTC', 'AMD', 'NVDA', 'ORCL']},
-        {'name': 'Bond ETFs', 'symbols': ['BND', 'BIV', 'JNK']},
-        {'name': 'Other ETFs', 'symbols': ['VOO', 'VTI', 'VGK', 'VPL', 'VWO', 'VDE', 'XOP', 'VFH', 'VHT', 'VIG', 'VYM', 'VAW', 'REM', 'XHB', 'GLD']},
-        {'name': 'Mortgage REITs', 'symbols': ['EFC', 'EARN', 'NLY', 'AGNC', 'CIM', 'TWO', 'NRZ']},
-        {'name': 'Autos', 'symbols': ['F', 'GM', 'FCAU', 'TM', 'HMC', 'TSLA']},
-        {'name': 'BigCos', 'symbols': ['XOM', 'WMT', 'JNJ', 'GE', 'T', 'KO', 'DIS', 'MCD', 'PG']}
+          {'name': 'Tech', 'symbols': ['AAPL', 'GOOG', 'GOOGL', 'AMZN', 'NFLX', 'BABA', 'AMD', 'NVDA', 'TEAM', 'PANW', 'SQ', 'OSTK']},
+          {'name': 'Autos', 'symbols': ['TSLA']},
+          {'name': 'BigCos', 'symbols': ['DIS', 'NKE']},
+          {'name': 'Banks', 'symbols': ['BAC']},
+          {'name': 'Watch', 'symbols': ['MSFT', 'SPOT', 'FB', 'TWTR', 'SNAP', 'HACK', 'CRM', 'ATVI']}
       ];
 
       const PORTFOLIOS = portfoliosFromQueryParams() || DEFAULT_PORTFOLIOS;
@@ -148,7 +149,7 @@
       function updateDataForBatch(symbols, addTitle) {
         let filters = ['latestPrice', 'change', 'changePercent', 'marketCap'];
         if (addTitle) filters.push('companyName');
-        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
+        let url = `${BASE_URL}?types=quote,dividends,news,peers,stats,company,financials,splits,volume-by-venue&range=1y&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
 
         fetch(url).then(response => response.json()).then(json => {
           symbols.forEach(symbol => {
