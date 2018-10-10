@@ -79,8 +79,10 @@
       const REFRESH_SECONDS = 10;
       const BATCH_SIZE = 100;
       const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
+      const FAVICON_SYMBOL = 'SPY';
+      const FAVICON_BASE_URL = 'https://d3v3cbxkdlyonc.cloudfront.net/stocks';
 
-      let symbols = [];
+      let symbols = [FAVICON_SYMBOL];
       let containerDiv = document.querySelector('.stocks-container');
       let updatedDiv = document.querySelector('.updated-timestamp');
 
@@ -187,6 +189,10 @@
                 e.setAttribute('title', data.quote.companyName);
               });
             }
+
+            if (symbol === FAVICON_SYMBOL) {
+              updateFavicon(data.quote);
+            }
           });
         });
       }
@@ -233,6 +239,16 @@
         let digits = value < 10 ? 1 : 0;
 
         return '$' + value.toFixed(digits) + suffix;
+      }
+
+      function updateFavicon(quote) {
+        let favicon = document.querySelector('link[rel="icon"]');
+        let path = quote.change < 0 ? 'favicon_down.ico' : 'favicon.ico';
+        let href = `${FAVICON_BASE_URL}/${path}`;
+
+        if (favicon.getAttribute('href') !== href) {
+          favicon.setAttribute('href', href);
+        }
       }
     </script>
   </body>
