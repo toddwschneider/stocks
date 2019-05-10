@@ -68,7 +68,7 @@
         {'name': 'Market ETFs', 'symbols': ['SPY', 'DIA', 'QQQ', 'IWM']},
         {'name': 'Sector ETFs', 'symbols': ['XLF', 'XLK', 'XLC', 'XLV', 'XLP', 'XLY', 'XLE', 'XLB', 'XLI', 'XLU', 'XLRE']},
         {'name': 'Banks', 'symbols': ['GS', 'MS', 'JPM', 'WFC', 'C', 'BAC', 'BCS', 'DB', 'CS', 'RBS']},
-        {'name': 'Tech', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB', 'TWTR', 'NFLX', 'LYFT', 'SNAP', 'PINS', 'SPOT', 'DBX', 'SQ', 'SFIX', 'PD', 'BABA', 'INTC', 'AMD', 'NVDA', 'ORCL']},
+        {'name': 'Tech', 'symbols': ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'FB', 'TWTR', 'NFLX', 'UBER', 'LYFT', 'SNAP', 'PINS', 'SPOT', 'DBX', 'SQ', 'SFIX', 'PD', 'BABA', 'INTC', 'AMD', 'NVDA', 'ORCL']},
         {'name': 'Cryptos', 'symbols': ['BTCUSDT', 'ETHUSDT']},
         {'name': 'Bond ETFs', 'symbols': ['BND', 'BIV', 'JNK']},
         {'name': 'Other ETFs', 'symbols': ['VOO', 'VTI', 'VGK', 'VPL', 'VWO', 'VDE', 'XOP', 'VFH', 'VHT', 'VIG', 'VYM', 'VAW', 'REM', 'XHB', 'XRT', 'GLD', 'SHV', 'FLOT', 'BKLN', 'MJ']},
@@ -158,7 +158,7 @@
         fetch(url).then(response => response.json()).then(json => {
           symbols.forEach(symbol => {
             let data = json[symbol];
-            if (typeof(data) === 'undefined') return;
+            if (typeof(data) === 'undefined' || !data.quote.latestPrice) return;
 
             let formattedPrice = formatQuote(data.quote.latestPrice);
             let formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
