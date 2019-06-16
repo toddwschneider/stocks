@@ -78,10 +78,17 @@
         {'name': 'BigCos', 'symbols': ['XOM', 'WMT', 'JNJ', 'GE', 'BA', 'T', 'KO', 'DIS', 'MCD', 'PG']}
       ];
 
+      // register for a token at https://iexcloud.io/
+      const API_TOKEN = 'YOUR_TOKEN_HERE';
+
+      if (API_TOKEN === 'YOUR_TOKEN_HERE') {
+        alert('You need to register for a token at https://iexcloud.io/');
+      }
+
       const PORTFOLIOS = portfoliosFromQueryParams() || DEFAULT_PORTFOLIOS;
       const REFRESH_SECONDS = 10;
       const BATCH_SIZE = 100;
-      const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
+      const BASE_URL = 'https://cloud.iexapis.com/stable/stock/market/batch';
       const FAVICON_SYMBOL = 'SPY';
       const FAVICON_BASE_URL = 'https://d3v3cbxkdlyonc.cloudfront.net/stocks';
 
@@ -153,7 +160,7 @@
       function updateDataForBatch(symbols, addTitle) {
         let filters = ['latestPrice', 'change', 'changePercent', 'marketCap'];
         if (addTitle) filters.push('companyName');
-        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
+        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}&token=${API_TOKEN}`;
 
         fetch(url).then(response => response.json()).then(json => {
           symbols.forEach(symbol => {
@@ -227,7 +234,7 @@
       }
 
       function formatMarketCap(marketCap) {
-        if (marketCap === null) return '';
+        if (marketCap === null || marketCap === 0) return '';
 
         let value, suffix;
         if (marketCap >= 1e12) {
