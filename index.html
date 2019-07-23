@@ -168,30 +168,29 @@
             if (typeof(data) === 'undefined' || !data.quote.latestPrice) return;
 
             let formattedPrice = formatQuote(data.quote.latestPrice);
-            let formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
-            let formattedChangePercent = (data.quote.changePercent * 100).toFixed(1) + '%';
+            let formattedChange = formatChange(data.quote.change);
+            let formattedChangePercent = formatChangePercent(data.quote.changePercent);
             let formattedMarketCap = formatMarketCap(data.quote.marketCap);
-            let rgbColor = data.quote.changePercent > 0 ? '0,255,0' : '255,0,0';
-            let rgbOpacity = Math.min(Math.abs(data.quote.changePercent) * 20, 1);
+            let bgColorStyle = calculateBgColorStyle(data.quote.changePercent)
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-price`).forEach(e => {
               e.innerHTML = formattedPrice;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change`).forEach(e => {
               e.innerHTML = formattedChange;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change-pct`).forEach(e => {
               e.innerHTML = formattedChangePercent;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-mkt-cap`).forEach(e => {
               e.innerHTML = formattedMarketCap;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             if (addTitle) {
@@ -224,6 +223,16 @@
         return `https://iextrading.com/apps/stocks/${symbol}`;
       }
 
+      function formatChange(value) {
+        if (value === undefined) return '';
+        return value.toLocaleString('en', {'minimumFractionDigits': 2});
+      }
+
+      function formatChangePercent(value) {
+        if (value === undefined) return '';
+        return (value * 100).toFixed(1) + '%';
+      }
+
       function formatQuote(value) {
         let options = {
           'minimumFractionDigits': 2,
@@ -234,7 +243,7 @@
       }
 
       function formatMarketCap(marketCap) {
-        if (marketCap === null || marketCap === 0) return '';
+        if (marketCap === null || marketCap === 0 || marketCap === undefined) return '';
 
         let value, suffix;
         if (marketCap >= 1e12) {
@@ -251,6 +260,15 @@
         let digits = value < 10 ? 1 : 0;
 
         return '$' + value.toFixed(digits) + suffix;
+      }
+
+      function calculateBgColorStyle(changePercent) {
+        if (changePercent === undefined) return '';
+
+        let rgbColor = changePercent > 0 ? '0,255,0' : '255,0,0';
+        let rgbOpacity = Math.min(Math.abs(changePercent) * 20, 1);
+
+        return `background-color: rgba(${rgbColor}, ${rgbOpacity})`;
       }
 
       function updateFavicon(quote) {
