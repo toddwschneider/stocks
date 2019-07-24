@@ -224,12 +224,12 @@
       }
 
       function formatChange(value) {
-        if (value === undefined) return '';
+        if (value === null || value === undefined) return '';
         return value.toLocaleString('en', {'minimumFractionDigits': 2});
       }
 
       function formatChangePercent(value) {
-        if (value === undefined) return '';
+        if (value === null || value === undefined) return '';
         return (value * 100).toFixed(1) + '%';
       }
 
