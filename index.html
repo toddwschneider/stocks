@@ -167,7 +167,7 @@
             let data = json[symbol];
             if (typeof(data) === 'undefined' || !data.quote.latestPrice) return;
 
-            let formattedPrice = formatQuote(data.quote.latestPrice);
+            let formattedPrice = formatQuote(Number(data.quote.latestPrice));
             let formattedChange = formatChange(data.quote.change);
             let formattedChangePercent = formatChangePercent(data.quote.changePercent);
             let formattedMarketCap = formatMarketCap(data.quote.marketCap);
