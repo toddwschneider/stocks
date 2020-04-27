@@ -1,6 +1,6 @@
 # Stocks!
 
-A free, lightweight, blazing-fast static page to get stock quotes using the [IEX API](https://iextrading.com/developer/). Stocks can be grouped into user-defined portfolios. Quotes update every 10 seconds. No API key required. Everything is contained within index.html, there are no external javascripts or stylesheets to load.
+A free, lightweight, blazing-fast static page to get stock quotes using the [IEX Cloud](https://iexcloud.io/). Stocks can be grouped into user-defined portfolios. Quotes update every 10 seconds. Everything is contained within index.html, there are no external javascripts or stylesheets to load.
 
 See here for a live demo: https://toddwschneider.com/stocks/
 
@@ -33,9 +33,9 @@ If you fork this repo on GitHub and edit index.html to reflect the stocks you wa
 
 You could also save index.html to your local disk and open it in your browser, or upload it to a cloud storage service like S3, GCS, or Azure Storage.
 
-## IEX API
+## IEX Cloud
 
-You do not need to sign up for anything or get an API key to use the [IEX API](https://iextrading.com/developer/docs/), but usage is subject to their [terms of service](https://iextrading.com/api-terms/).
+As of June 2019, you need to sign up for IEX Cloud at https://iexcloud.io/
 
 ## Why aren't the market indices available? (S&P 500, DJIA, NASDAQ)
 

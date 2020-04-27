@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Live Stocks!</title>
     <link rel="icon" href="https://d3v3cbxkdlyonc.cloudfront.net/stocks/favicon.ico">
+    <link rel="apple-touch-icon" href="https://d3v3cbxkdlyonc.cloudfront.net/stocks/apple-touch-icon.png">
     <meta name="description" content="A free, lightweight, blazing-fast page to get stock quotes using the IEX API">
 
     <style>
@@ -70,10 +71,17 @@
         {'name': 'Mutual Funds', 'symbols': ['VCAIX', 'VTIVX', 'VTWO']}        
       ];
 
+      // register for a token at https://iexcloud.io/
+      const API_TOKEN = 'YOUR_TOKEN_HERE';
+
+      if (API_TOKEN === 'YOUR_TOKEN_HERE') {
+        alert('You need to register for a token at https://iexcloud.io/');
+      }
+
       const PORTFOLIOS = portfoliosFromQueryParams() || DEFAULT_PORTFOLIOS;
       const REFRESH_SECONDS = 10;
       const BATCH_SIZE = 100;
-      const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
+      const BASE_URL = 'https://cloud.iexapis.com/stable/stock/market/batch';
       const FAVICON_SYMBOL = 'SPY';
       const FAVICON_BASE_URL = 'https://d3v3cbxkdlyonc.cloudfront.net/stocks';
 
@@ -145,38 +153,37 @@
       function updateDataForBatch(symbols, addTitle) {
         let filters = ['latestPrice', 'change', 'changePercent', 'marketCap'];
         if (addTitle) filters.push('companyName');
-        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}`;
+        let url = `${BASE_URL}?types=quote&symbols=${symbols.join(',')}&filter=${filters.join(',')}&token=${API_TOKEN}`;
 
         fetch(url).then(response => response.json()).then(json => {
           symbols.forEach(symbol => {
             let data = json[symbol];
-            if (typeof(data) === 'undefined') return;
+            if (typeof(data) === 'undefined' || !data.quote.latestPrice) return;
 
-            let formattedPrice = formatQuote(data.quote.latestPrice);
-            let formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
-            let formattedChangePercent = (data.quote.changePercent * 100).toFixed(1) + '%';
+            let formattedPrice = formatQuote(Number(data.quote.latestPrice));
+            let formattedChange = formatChange(data.quote.change);
+            let formattedChangePercent = formatChangePercent(data.quote.changePercent);
             let formattedMarketCap = formatMarketCap(data.quote.marketCap);
-            let rgbColor = data.quote.changePercent > 0 ? '0,255,0' : '255,0,0';
-            let rgbOpacity = Math.min(Math.abs(data.quote.changePercent) * 20, 1);
+            let bgColorStyle = calculateBgColorStyle(data.quote.changePercent)
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-price`).forEach(e => {
               e.innerHTML = formattedPrice;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change`).forEach(e => {
               e.innerHTML = formattedChange;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change-pct`).forEach(e => {
               e.innerHTML = formattedChangePercent;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-mkt-cap`).forEach(e => {
               e.innerHTML = formattedMarketCap;
-              e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+              e.setAttribute('style', bgColorStyle);
             });
 
             if (addTitle) {
@@ -209,6 +216,16 @@
         return `https://iextrading.com/apps/stocks/${symbol}`;
       }
 
+      function formatChange(value) {
+        if (value === null || value === undefined) return '';
+        return value.toLocaleString('en', {'minimumFractionDigits': 2});
+      }
+
+      function formatChangePercent(value) {
+        if (value === null || value === undefined) return '';
+        return (value * 100).toFixed(1) + '%';
+      }
+
       function formatQuote(value) {
         let options = {
           'minimumFractionDigits': 2,
@@ -219,7 +236,7 @@
       }
 
       function formatMarketCap(marketCap) {
-        if (marketCap === null) return '';
+        if (marketCap === null || marketCap === 0 || marketCap === undefined) return '';
 
         let value, suffix;
         if (marketCap >= 1e12) {
@@ -236,6 +253,15 @@
         let digits = value < 10 ? 1 : 0;
 
         return '$' + value.toFixed(digits) + suffix;
+      }
+
+      function calculateBgColorStyle(changePercent) {
+        if (changePercent === undefined) return '';
+
+        let rgbColor = changePercent > 0 ? '0,255,0' : '255,0,0';
+        let rgbOpacity = Math.min(Math.abs(changePercent) * 20, 1);
+
+        return `background-color: rgba(${rgbColor}, ${rgbOpacity})`;
       }
 
       function updateFavicon(quote) {
