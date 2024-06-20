@@ -1,6 +1,6 @@
 # Update / IEX Cloud Shutdown
 
-IEX Cloud [announced it will be shutting](https://iexcloud.io/product-bulletin) down in August 2024. I'm putting this repo into public archive, thought it's possible in the future I'll swap in another data provider
+IEX Cloud [announced it will be shutting](https://iexcloud.io/product-bulletin) down in August 2024. I'm putting this repo into public archive, though it's possible in the future I'll swap in another data provider
 
 # Stocks!
 
